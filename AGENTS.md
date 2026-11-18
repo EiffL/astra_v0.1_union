@@ -16,6 +16,8 @@ lc run local -- python src/...     # probe in the recipe sandbox; write probes u
 lc materialize local               # build every stale result; commits each one
 lc materialize --check             # the gate: exits 0 when everything is current
 lc status --json
+# publish after every materialize (lc commits but never pushes):
+git annex copy --to=github-lfs && git push origin master git-annex
 ```
 
 This `lc` (0.5.2.dev) takes a cluster as the first positional argument of
@@ -48,3 +50,12 @@ This `lc` (0.5.2.dev) takes a cluster as the first positional argument of
   `uvx astra-tools@0.2.18`, which rejects the 0.3 schema (`spec_version`,
   `label`, map-style inputs, `universes`). Ignore those reports and trust
   `astra validate`.
+- **Hosting (2026-11-19):** public at https://github.com/EiffL/astra_v0.1_union.
+  Annexed content (`data/`, `results/`) lives in that repo's LFS store
+  through the git-annex special remote `github-lfs` (type=git-lfs,
+  encryption=none, autoenable=true). `origin` is annex-ignore. A fresh clone
+  gets content with `git annex init` (or `lc init`) then `git annex get .`.
+  github.com still shows annex pointer files, not previews. GitHub can't
+  delete individual LFS objects, so whatever is copied there stays. Avoid
+  `git annex sync`, which pushes `synced/*` branches to GitHub. The local
+  annex is described as "laptop".
