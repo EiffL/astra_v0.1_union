@@ -126,6 +126,30 @@ outputs:
         --published-stat 0.277 0.021 0.022
         --published-sys 0.295 0.040 0.043
         --output {output}
+  om_universe_comparison:
+    label: Ωm across universes
+    type: figure
+    format: png
+    description: >-
+      Overlays the Ωm posteriors of the `baseline` (stat+sys) and `stat_only`
+      universes, each with its 68% interval shaded and its point estimate
+      dashed. Beside each one is the matching Suzuki et al. (2012) Table 7
+      SN-only flat ΛCDM value, passed as literal constants in the recipe.
+      It reads each universe's result through a pinned reference, so it is
+      built once rather than per universe.
+    inputs:
+      - om_posterior#baseline
+      - om_constraint#baseline
+      - om_posterior#stat_only
+      - om_constraint#stat_only
+    recipe:
+      command: >-
+        python src/plot_universe_comparison.py
+        --universe baseline {inputs.om_posterior#baseline} {inputs.om_constraint#baseline}
+        --universe stat_only {inputs.om_posterior#stat_only} {inputs.om_constraint#stat_only}
+        --published baseline 0.295 0.040 0.043
+        --published stat_only 0.277 0.021 0.022
+        --output {output}
 
 decisions:
   covariance:
